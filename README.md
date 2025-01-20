@@ -1,66 +1,116 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Monolith to Microservices
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## NOTE: This is not an officially supported Google product
 
-## About Laravel
+## Introduction
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### This project is used by the Google Cloud Platform team to demonstrate different services within Google Cloud. This project contains two versions of the same application, one architected as a monolith and the other as a set of microservices
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Setup
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### **NOTE:** Make sure you have a newer version of NodeJS (16.13.0) or newer (in Cloud Shell you can run `nvm install --lts`)
 
-## Learning Laravel
+```bash
+git clone https://github.com/googlecodelabs/monolith-to-microservices
+cd monolith-to-microservices
+./setup.sh
+```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Monolith
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### To run the monolith project use the following commands from the top level directory
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+```bash
+cd monolith
+npm start
+```
 
-## Laravel Sponsors
+You should see output similar to the following
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+```text
+Monolith listening on port 8080!
+```
 
-### Premium Partners
+#### That's it! You now have a perfectly functioning monolith running on your machine
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+### Docker - Monolith
 
-## Contributing
+#### To create a Docker image for the monolith, execute the following commands
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```bash
+cd monolith
+docker build -t monolith:1.0.0 .
+```
 
-## Code of Conduct
+To run the Docker image, execute the following commands
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+docker run --rm -p 8080:8080 monolith:1.0.0
+```
 
-## Security Vulnerabilities
+## Microservices
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### To run the microservices project use the following commands from the top level directory
 
-## License
+```bash
+cd microservices
+npm start
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+You should see output similar to the following
+
+```text
+[0] Frontend microservice listening on port 8080!
+[2] Orders microservice listening on port 8081!
+[1] Products microservice listening on port 8082!
+```
+
+### That's it! You now have a perfectly functioning set of microservices running on your machine
+
+### Docker - Microservices
+
+### To create a Docker image for the microservices, you will have to create a Docker image for each service. Execute the following commands for each folder under the microservices folder
+
+```bash
+cd microservices/src/frontend
+docker build -t frontend:1.0.0 .
+
+cd ../products
+docker build -t products:1.0.0 .
+
+cd ../orders
+docker build -t orders:1.0.0 .
+```
+
+To run the Docker image, execute the following commands
+
+```bash
+docker run -d --rm -p 8080:8080 monolith:1.0.0
+docker run -d --rm -p 8081:8081 orders:1.0.0
+docker run -d --rm -p 8082:8082 products:1.0.0
+```
+
+#### To stop the containers, you will need to find the CONTAINER ID for each and stop them individually. See the steps below
+
+```bash
+docker ps -a
+
+CONTAINER ID        IMAGE                        COMMAND                CREATED
+4c01db0b339c        frontend:1.0.0               bash                   17 seconds ago
+d7886598dbe2        orders:1.0.0                 bash                   17 seconds ago
+d85756f57265        products:1.0.0               bash                   17 seconds ago
+
+docker stop 4c01db0b339c
+docker stop d7886598dbe2
+docker stop d85756f57265
+```
+
+## React App
+
+### The react-app folder contains a React application created from `create-react-app`. You can modify this fronted, but afterwards, you will need to build and move the static files to the monolith and microservices project. You can do this by running the standard create-react-app build command below
+
+```bash
+npm run build
+```
+
+#### This will run the build script to create the static files two times. The first will build with relative URLs and copy the static files to the monolith/public folder. The second run will build with the standard microservices URLs and copy the static files to the microservices/src/frontend/public folder
