@@ -27,10 +27,10 @@ export default function Home() {
           padding: (theme) => theme.spacing(3, 2),
         }}
       >
-        <Typography variant="h5">Welcome to the McDelivery Store!</Typography>
+        <Typography variant="h5">McDelivery &amp; Style Online</Typography>
         <br />
         <Typography variant="body1">
-          In here we sell a wide variety of products, including alot of stuff. And we directly deliver them to your doorstep!
+          In McDelivery, we deliver all kinds of products, check out our catalogue!
         </Typography>
       </Paper>
     </Box>

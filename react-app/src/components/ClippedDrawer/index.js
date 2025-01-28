@@ -55,7 +55,7 @@ export default function ClippedDrawer() {
         >
           <Toolbar>
             <Typography variant="h6" noWrap>
-              Fancy Store
+              McDelivery
             </Typography>
           </Toolbar>
         </AppBar>
@@ -79,7 +79,7 @@ export default function ClippedDrawer() {
               activeClassName="Mui-selected"
               to="/"
             >
-              <ListItemText primary="Home" />
+              <ListItemText primary="About Us" />
             </ListItem>{" "}
             <ListItem
               component={NavLink}
@@ -88,7 +88,7 @@ export default function ClippedDrawer() {
               activeClassName="Mui-selected"
               to="/products"
             >
-              <ListItemText primary="Products" />
+              <ListItemText primary="Contact Us" />
             </ListItem>{" "}
             <ListItem
               component={NavLink}
